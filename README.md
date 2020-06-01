@@ -1,5 +1,9 @@
 # nasmshell
 
+## TODO:
+
+ - [] Add "exec" function to assemble and execute instructions
+
 ## commands
 
 1. **as, assemble** - set to assembly mode
