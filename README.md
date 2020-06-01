@@ -2,7 +2,8 @@
 
 ## TODO:
 
- - [] Add "exec" function to assemble and execute instructions
+ - [ ] Check if NASM is installed
+ - [ ] Add "exec" function to assemble and execute instructions
 
 ## commands
 
