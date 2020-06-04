@@ -8,7 +8,7 @@
 ## commands
 
 1. **as, assemble** - set to assembly mode
-2. **disas** - set to disassembly mode
+2. **ds, disas** - set to disassembly mode
 3. **bits** - set bits (32 or 64)
 4. **exit, quit** - exit shell
 

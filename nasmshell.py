@@ -17,6 +17,9 @@ def string_to_bytes(string, charset='latin-1'):
     return bytes(string, charset)
 
 def execute_shellcode(shellcode_str):
+
+  print(f"shellocde_str={shellcode_str}")
+
   shellcode_bytes = string_to_bytes(shellcode_str)
 
   print(f"shellcode_bytes={shellcode_bytes}")
@@ -26,6 +29,8 @@ def execute_shellcode(shellcode_str):
                        prot = mmap.PROT_READ | mmap.PROT_WRITE | mmap.PROT_EXEC,
                        flags = mmap.MAP_ANONYMOUS | mmap.MAP_PRIVATE)
 
+  print(f"memory address={exec_mem}")
+
   # Copy shellcode from bytes object to executable memory
   exec_mem.write(shellcode_bytes)
 
@@ -33,6 +38,8 @@ def execute_shellcode(shellcode_str):
   ctypes_buffer = ctypes.c_int.from_buffer(exec_mem)
   function = ctypes.CFUNCTYPE( ctypes.c_int64 )(ctypes.addressof(ctypes_buffer))
   function._avoid_gc_for_mmap = exec_mem
+
+  print(f"function={function}")
 
   # Return pointer to shell code function in executable memory
   return function
@@ -87,6 +94,7 @@ def reduce_disassembly(disas):
     print(f"cur_opcodes={cur_opcodes}")
     fmt_opcodes = bytes.fromhex(cur_opcodes)
     fm2_opcodes = string_to_bytes(cur_opcodes)
+    print(f"fm_opcodes ={fm_opcodes}")
     print(f"fm2_opcodes={fm2_opcodes}")
     return fmt_opcodes
 
@@ -164,6 +172,10 @@ class NasmShell(cmd.Cmd):
         self.prompt = self.disas_prompt
         print("disas mode")
 
+    def do_ds(self, *args):
+        '''an alias for disassemble mode'''
+        self.do_disas(self)
+
     def do_assemble(self, *args):
         '''set assemble mode. Input following should be instructions.'''
         self.disas_mode = False
@@ -180,6 +192,10 @@ class NasmShell(cmd.Cmd):
         self.exec_mode = True
         self.prompt = self.exec_prompt
         print("assemble (exec) mode")
+
+    def do_test(self, *args):
+      self.args = "\xb8\x01\x00\x00\x00\xbf\x01\x00\x00\x00\x48\x8d\x35\x13\x00\x00\x00\xba\x06\x00\x00\x00\x0f\x05\xb8\x3c\x00\x00\x00\xbf\x00\x00\x00\x00\x0f\x05\x48\x65\x6c\x6c\x6f\x0a"
+      execute_shellcode(self.args)()
 
     def do_quit(self, *args):
         '''quit the program'''
@@ -202,7 +218,7 @@ class NasmShell(cmd.Cmd):
                     print(raw)
                     if self.exec_mode:
                         print("attempting to execute shellcode")
-                        execute_shellcode(reduce_disassembly(raw))
+                        execute_shellcode(reduce_disassembly(raw))()
             except NasmException as ne:
                 print(ne)
             except TypeError as te:
