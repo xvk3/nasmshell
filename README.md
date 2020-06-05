@@ -4,13 +4,15 @@
 
  - [ ] Check if NASM is installed
  - [ ] Add "exec" function to assemble and execute instructions
+ - [ ] Get return value of the shellcode
 
 ## commands
 
 1. **as, assemble** - set to assembly mode
 2. **ds, disas** - set to disassembly mode
 3. **bits** - set bits (32 or 64)
-4. **exit, quit** - exit shell
+4. **test** - runs the test shellcode
+5. **exit, quit** - exit shell
 
 ## examples
 
